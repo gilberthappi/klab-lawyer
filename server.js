@@ -7,6 +7,7 @@ import swaggerUi from 'swagger-ui-express';
 import swaggerJSDoc from 'swagger-jsdoc';
 import { swaggerOptions } from './src/utils/swaggerConfig';
 import AppError from './src/utils/appError';
+import contactsRouter from "./src/routes"
 // import { globalControllerHandler, globalErrorHandler } from './src/controllers/ErrorController.js';
 
 require('dotenv').config();
@@ -21,6 +22,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/api/v1', mainRouter);
 
+
 const swaggerSpec = swaggerJSDoc(swaggerOptions); 
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
@@ -30,9 +32,9 @@ app.get('/', (req, res) => {
 });
 
 
-app.all('*', (req, res) => {
-    next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
-    });
+// app.all('*', (req, res) => {
+//     next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
+//     });
 
 // app.use(globalControllerHandler);
 
