@@ -15,6 +15,7 @@
     "nodemailer": "^6.9.7",
     "nodemon": "^3.0.1",
     "paypack-js": "^0.2.1",
+    "socket.io": "^4.7.2",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0"
   },
