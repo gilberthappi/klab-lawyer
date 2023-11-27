@@ -4,4 +4,8 @@ export * from "./clientModel";
 export * from "./lawyerModel";
 export * from "./adminModel";
 export * from "./subscription Model";
+export * from "./caseModel";
+export * from './testimonyModel';
+export* from "./feedbackModel";
+
 
