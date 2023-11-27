@@ -39,7 +39,7 @@ app.get('/', (req, res) => {
 // app.use(globalControllerHandler);
 
 
-mongoose.connect(process.env.DB_CONNECTION_PROD).then(() => {
+mongoose.connect(process.env.DB_CONNECTION_DEV).then(() => {
     app.listen(port, () => {
         console.log(`Server running on port http://localhost:${port}`);
         console.log('Database is connected');
