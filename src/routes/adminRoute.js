@@ -81,6 +81,7 @@ const adminRouter = express.Router();
  *             properties:
  *               userType:
  *                type: string
+ *                enum: ['admin']
  *               name:
  *                 type: string
  *               email:
