@@ -123,6 +123,7 @@ const clientRouter = express.Router();
  *             properties:
  *               userType:
  *                type: string
+ *                enum: ['individual']
  *               name:
  *                 type: string
  *               email:
@@ -165,6 +166,7 @@ clientRouter.post('/signup/individual', uploaded, signup);
  *             properties:
  *               userType:
  *                type: string
+ *                enum: ['organization']
  *               name:
  *                 type: string
  *               email:

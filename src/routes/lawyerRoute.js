@@ -81,6 +81,7 @@ const lawyerRouter = express.Router();
  *             properties:
  *               userType:
  *                type: string
+ *                enum: ['lawyer']
  *               name:
  *                 type: string
  *               email:
