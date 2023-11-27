@@ -8,15 +8,15 @@ import {
   verifyProfile,
   verifyClientAndCompleteProfile,
   getAllClients,
-} from '../controllers/authantecation/clientAuth';
+} from '../controllers/authantecation/adminAuth';
 import { verifyToken, uploaded, isAdmin } from '../middleware';
 
-const clientRouter = express.Router();
+const adminRouter = express.Router();
 
 /**
  * @swagger
  * tags:
- *   name: ClientAuthentications
+ *   name: AdminAuthentications
  *   description: Lawyer API
  */
 
@@ -30,7 +30,7 @@ const clientRouter = express.Router();
  *       scheme: bearer
  *       bearerFormat: JWT
  *   schemas:
- *     User:
+ *     Admin:
  *       type: object
  *       properties:
  *         email:
@@ -45,7 +45,7 @@ const clientRouter = express.Router();
  *           type: string
  *         role:
  *           type: string
- *           default: 'user'
+ *           default: 'admin'
  *         confirmPassword:
  *           type: string
  *         photo:
@@ -64,56 +64,14 @@ const clientRouter = express.Router();
  *         - confirmPassword
  */
 
-/**
- * @swagger
- * components:
- *   schemas:
- *     Organization:
- *       type: object
- *       properties:
- *         email:
- *           type: string
- *           required: true
- *           unique: true
- *         name:
- *           type: string
- *         password:
- *           type: string
- *         confirmPassword:
- *           type: string
- *         phone:
- *           type: string
- *         registrationNumber:
- *           type: string
- *         contactPerson:
- *           type: string
- *         role:
- *           type: string
- *           default: 'user'
- *         photo:
- *                 type: file
- *                 items: 
- *                   type: String
- *                   format: binary
- *         documents:
- *                 type: file
- *                 items:
- *                   type: String
- *                   format: binary
- *       required:
- *         - email
- *         - organizationName
- *         - password
- *         - confirmPassword
- */
 
 /**
  * @swagger
- * /client/signup/individual:
+ * /admin/signup:
  *   post:
- *     summary: Individual Signup
- *     tags: [ClientAuthentications]
- *     description: Register a new individual user.
+ *     summary: Admin Signup
+ *     tags: [AdminAuthentications]
+ *     description: Register a new Admin.
  *     requestBody:
  *       required: true
  *       content:
@@ -133,7 +91,11 @@ const clientRouter = express.Router();
  *                 type: string
  *               phone:
  *                 type: string
- *               
+ *               documents:
+ *                 type: file
+ *                 items: 
+ *                   type: String
+ *                   format: binary
  *             required:
  *               - email
  *               - password
@@ -141,65 +103,23 @@ const clientRouter = express.Router();
  *               - userType
  *     responses:
  *       201:
- *         description: User registered successfully
+ *         description: Admin registered successfully
  *       400:
  *         description: Bad Request - Invalid data
  *       409:
  *         description: Conflict - User already exists
  */
-clientRouter.post('/signup/individual', uploaded, signup);
+
+adminRouter.post('/signup', uploaded, signup);
+
 
 /**
  * @swagger
- * /client/signup/organization:
+ * /admin/login:
  *   post:
- *     summary: Organization Signup
- *     tags: [ClientAuthentications]
- *     description: Register a new organization user.
- *     requestBody:
- *       required: true
- *       content:
- *         multipart/form-data:
- *           schema:
- *             type: object
- *             properties:
- *               userType:
- *                type: string
- *               name:
- *                 type: string
- *               email:
- *                 type: string
- *               password:
- *                 type: string
- *               confirmPassword:
- *                 type: string
- *               phone:
- *                 type: string
- *               registrationNumber:
- *                type: string
- *             
- *             required:
- *               - email
- *               - password
- *               - confirmPassword
- *               - userType
- *     responses:
- *       201:
- *         description: User registered successfully
- *       400:
- *         description: Bad Request - Invalid data
- *       409:
- *         description: Conflict - User already exists
- */
-clientRouter.post('/signup/organization', uploaded, signup);
-
-/**
- * @swagger
- * /client/login:
- *   post:
- *     summary: Client Login
- *     tags: [ClientAuthentications]
- *     description: Authenticate a user and obtain an access token.
+ *     summary: Admin Login
+ *     tags: [AdminAuthentications]
+ *     description: Authenticate a Admin and obtain an access token.
  *     requestBody:
  *       required: true
  *       content:
@@ -216,20 +136,20 @@ clientRouter.post('/signup/organization', uploaded, signup);
  *               - password
  *     responses:
  *       200:
- *         description: User authenticated, access token obtained
+ *         description: Admin authenticated, access token obtained
  *       401:
  *         description: Unauthorized - Invalid credentials
  */
 
-clientRouter.post('/login', uploaded, login);
+adminRouter.post('/login', uploaded, login);
 
 /**
  * @swagger
- * /client/changePassword:
+ * /admin/changePassword:
  *   post:
- *     summary: Client change Password
- *     tags: [ClientAuthentications]
- *     description: Change the password of an authenticated Client.
+ *     summary: Admin change Password
+ *     tags: [AdminAuthentications]
+ *     description: Change the password of an authenticated Admin.
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -255,15 +175,15 @@ clientRouter.post('/login', uploaded, login);
  *         description: Bad Request - Invalid data
  */
 
-clientRouter.post('/changePassword',uploaded, verifyToken, changePassword);
+adminRouter.post('/changePassword',uploaded, verifyToken, changePassword);
 
 /**
  * @swagger
- * /client/forgotPassword:
+ * /admin/forgotPassword:
  *   post:
  *     summary: Forgot Password
- *     tags: [ClientAuthentications]
- *     description: Initiate the process to reset the user's password.
+ *     tags: [AdminAuthentications]
+ *     description: Initiate the process to reset the Admin's password.
  *     requestBody:
  *       required: true
  *       content:
@@ -284,15 +204,15 @@ clientRouter.post('/changePassword',uploaded, verifyToken, changePassword);
  *         description: Internal Server Error
  */
 
-  clientRouter.post('/forgotPassword',uploaded, forgotPassword); 
+adminRouter.post('/forgotPassword',uploaded, forgotPassword); 
 
 /**
  * @swagger
- * /client/resetPassword:
+ * /admin/resetPassword:
  *   post:
  *     summary: Reset Password
- *     tags: [ClientAuthentications]
- *     description: Reset the user's password using a valid reset token.
+ *     tags: [AdminAuthentications]
+ *     description: Reset the Admin's password using a valid reset token.
  *     requestBody:
  *       required: true
  *       content:
@@ -316,16 +236,16 @@ clientRouter.post('/changePassword',uploaded, verifyToken, changePassword);
  *         description: Internal Server Error
  */
 
-clientRouter.post('/resetPassword',uploaded, resetPassword);
+adminRouter.post('/resetPassword',uploaded, resetPassword);
 
 
   /**
  * @swagger
- * /client/individual/verifyProfile:
+ * /admin/verifyProfile:
  *   post:
- *     summary: Client verifyProfile
- *     tags: [ClientAuthentications]
- *     description: Client verifyProfile
+ *     summary: Admin verifyProfile
+ *     tags: [AdminAuthentications]
+ *     description: Admin verifyProfile
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -371,71 +291,17 @@ clientRouter.post('/resetPassword',uploaded, resetPassword);
  *         description: Conflict - verifyProfile already exists
  */
 
-  clientRouter.post('/individual/verifyProfile',uploaded, verifyToken, verifyClientAndCompleteProfile);
+  adminRouter.post('/verifyProfile',uploaded, verifyToken, verifyClientAndCompleteProfile);
 
-  /**
- * @swagger
- * /client/organization/verifyProfile:
- *   post:
- *     summary: Client verifyProfile
- *     tags: [ClientAuthentications]
- *     description: Client verifyProfile
- *     security:
- *       - bearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         multipart/form-data:
- *           schema:
- *             type: object
- *             properties:
- *               name:
- *                type: string
- *               phone: 
- *                type: string
- *               photo:
- *                 type: file
- *                 items: 
- *                   type: String
- *                   format: binary
- *               country:
- *                 type: string
- *               city:
- *                 type: string
- *               district:
- *                 type: string
- *               sector:
- *                 type: string
- *               cell:
- *                 type: string
- *               registrationNumber:
- *                 type: string
- *               contactPerson:
- *                 type: string
- *               documents:
- *                 type: file
- *                 items: 
- *                   type: String
- *                   format: binary
- * 
- *     responses:
- *       201:
- *         description: verified successfully
- *       400:
- *         description: Bad Request - Invalid data
- *       409:
- *         description: Conflict - verifyProfile already exists
- */
-
-  clientRouter.post('/organization/verifyProfile',uploaded, verifyToken, verifyClientAndCompleteProfile);
+  
 
 /**
  * @swagger
- * /client/all:
+ * /admin/all:
  *   get:
- *     summary: Get all users
- *     tags: [ClientAuthentications]
- *     description: Retrieve a list of all users.
+ *     summary: Get all Admin
+ *     tags: [AdminAuthentications]
+ *     description: Retrieve a list of all Admin.
  *     responses:
  *       200:
  *         description: Success
@@ -458,7 +324,7 @@ clientRouter.post('/resetPassword',uploaded, resetPassword);
  *                 type: string
  */
 
-clientRouter.get('/all',  getAllClients);
+adminRouter.get('/all',  getAllClients);
 // ... (other routes)
 
-export default clientRouter;
+export default adminRouter;

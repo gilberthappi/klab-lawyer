@@ -50,10 +50,6 @@ import { createContact, getAllContacts, getContactById} from "../controllers/con
  *     responses:
  *       201:
  *          description: The new contact data was successfully created
- *          content:
- *             application/json:
- *               schema:
- *                   $ref: '#/components/schemas/contacts'
  *       500:
  *          description: Internal Server Error
  */
@@ -65,12 +61,6 @@ import { createContact, getAllContacts, getContactById} from "../controllers/con
  *      responses:
  *        200:
  *          description: The list of the contacts
- *          content:
- *            application/json:
- *              schema:
- *                type: array
- *                items: 
- *                  $ref: '#/components/schemas/contacts'
  */
 /**
  * @swagger
@@ -89,10 +79,6 @@ import { createContact, getAllContacts, getContactById} from "../controllers/con
  *     responses:
  *       200:
  *         description: The user description by ID
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/contacts'
  *       404:
  *         description: The user was not found
  */
@@ -119,10 +105,6 @@ import { createContact, getAllContacts, getContactById} from "../controllers/con
  *     responses:
  *       200:
  *         description: The contact was updated
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/contacts'
  *       404:
  *         description: The user was not found
  *       500:
