@@ -1,5 +1,7 @@
 export * from "./chatModel";
 export * from "./contactModel";
-export * from "./feedbackModel";
-export *from "./caseModel";
-export *from "./testimonyModel";
+export * from "./clientModel";
+export * from "./lawyerModel";
+export * from "./adminModel";
+export * from "./subscription Model";
+

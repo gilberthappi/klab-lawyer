@@ -8,15 +8,15 @@ import {
   verifyProfile,
   verifyClientAndCompleteProfile,
   getAllClients,
-} from '../controllers/authantecation/clientAuth';
+} from '../controllers/authantecation/lawyerAuth';
 import { verifyToken, uploaded, isAdmin } from '../middleware';
 
-const clientRouter = express.Router();
+const lawyerRouter = express.Router();
 
 /**
  * @swagger
  * tags:
- *   name: ClientAuthentications
+ *   name: LawyerAuthentications
  *   description: Lawyer API
  */
 
@@ -30,7 +30,7 @@ const clientRouter = express.Router();
  *       scheme: bearer
  *       bearerFormat: JWT
  *   schemas:
- *     User:
+ *     Lawyer:
  *       type: object
  *       properties:
  *         email:
@@ -45,7 +45,7 @@ const clientRouter = express.Router();
  *           type: string
  *         role:
  *           type: string
- *           default: 'user'
+ *           default: 'lawyer'
  *         confirmPassword:
  *           type: string
  *         photo:
@@ -64,77 +64,39 @@ const clientRouter = express.Router();
  *         - confirmPassword
  */
 
+
 /**
  * @swagger
- * components:
- *   schemas:
- *     Organization:
- *       type: object
- *       properties:
- *         email:
- *           type: string
- *           required: true
- *           unique: true
- *         name:
- *           type: string
- *         password:
- *           type: string
- *         confirmPassword:
- *           type: string
- *         phone:
- *           type: string
- *         registrationNumber:
- *           type: string
- *         contactPerson:
- *           type: string
- *         role:
- *           type: string
- *           default: 'user'
- *         photo:
+ * /lawyer/signup:
+ *   post:
+ *     summary: Lawyer Signup
+ *     tags: [LawyerAuthentications]
+ *     description: Register a new Lawyer.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userType:
+ *                type: string
+ *                enum: ['lawyer']
+ *               name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *               confirmPassword:
+ *                 type: string
+ *               phone:
+ *                 type: string
+ *               documents:
  *                 type: file
  *                 items: 
  *                   type: String
  *                   format: binary
- *         documents:
- *                 type: file
- *                 items:
- *                   type: String
- *                   format: binary
- *       required:
- *         - email
- *         - organizationName
- *         - password
- *         - confirmPassword
- */
-
-/**
- * @swagger
- * /client/signup/individual:
- *   post:
- *     summary: Individual Signup
- *     tags: [ClientAuthentications]
- *     description: Register a new individual user.
- *     requestBody:
- *       required: true
- *       content:
- *         multipart/form-data:
- *           schema:
- *             type: object
- *             properties:
- *               userType:
- *                type: string
- *                enum: ['individual']
- *               name:
- *                 type: string
- *               email:
- *                 type: string
- *               password:
- *                 type: string
- *               confirmPassword:
- *                 type: string
- *               phone:
- *                 type: string
- *               
  *             required:
  *               - email
  *               - password
@@ -142,66 +104,22 @@ const clientRouter = express.Router();
  *               - userType
  *     responses:
  *       201:
- *         description: User registered successfully
+ *         description: Lawyer registered successfully
  *       400:
  *         description: Bad Request - Invalid data
  *       409:
  *         description: Conflict - User already exists
  */
-clientRouter.post('/signup/individual', uploaded, signup);
+lawyerRouter.post('/signup', uploaded, signup);
+
 
 /**
  * @swagger
- * /client/signup/organization:
+ * /lawyer/login:
  *   post:
- *     summary: Organization Signup
- *     tags: [ClientAuthentications]
- *     description: Register a new organization user.
- *     requestBody:
- *       required: true
- *       content:
- *         multipart/form-data:
- *           schema:
- *             type: object
- *             properties:
- *               userType:
- *                type: string
- *                enum: ['organization']
- *               name:
- *                 type: string
- *               email:
- *                 type: string
- *               password:
- *                 type: string
- *               confirmPassword:
- *                 type: string
- *               phone:
- *                 type: string
- *               registrationNumber:
- *                type: string
- *             
- *             required:
- *               - email
- *               - password
- *               - confirmPassword
- *               - userType
- *     responses:
- *       201:
- *         description: User registered successfully
- *       400:
- *         description: Bad Request - Invalid data
- *       409:
- *         description: Conflict - User already exists
- */
-clientRouter.post('/signup/organization', uploaded, signup);
-
-/**
- * @swagger
- * /client/login:
- *   post:
- *     summary: Client Login
- *     tags: [ClientAuthentications]
- *     description: Authenticate a user and obtain an access token.
+ *     summary: Lawyer Login
+ *     tags: [LawyerAuthentications]
+ *     description: Authenticate a Lawyer and obtain an access token.
  *     requestBody:
  *       required: true
  *       content:
@@ -218,20 +136,20 @@ clientRouter.post('/signup/organization', uploaded, signup);
  *               - password
  *     responses:
  *       200:
- *         description: User authenticated, access token obtained
+ *         description: Lawyer authenticated, access token obtained
  *       401:
  *         description: Unauthorized - Invalid credentials
  */
 
-clientRouter.post('/login', uploaded, login);
+lawyerRouter.post('/login', uploaded, login);
 
 /**
  * @swagger
- * /client/changePassword:
+ * /lawyer/changePassword:
  *   post:
- *     summary: Client change Password
- *     tags: [ClientAuthentications]
- *     description: Change the password of an authenticated Client.
+ *     summary: Lawyer change Password
+ *     tags: [LawyerAuthentications]
+ *     description: Change the password of an authenticated Lawyer.
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -257,15 +175,15 @@ clientRouter.post('/login', uploaded, login);
  *         description: Bad Request - Invalid data
  */
 
-clientRouter.post('/changePassword',uploaded, verifyToken, changePassword);
+lawyerRouter.post('/changePassword',uploaded, verifyToken, changePassword);
 
 /**
  * @swagger
- * /client/forgotPassword:
+ * /lawyer/forgotPassword:
  *   post:
  *     summary: Forgot Password
- *     tags: [ClientAuthentications]
- *     description: Initiate the process to reset the user's password.
+ *     tags: [LawyerAuthentications]
+ *     description: Initiate the process to reset the Lawyer's password.
  *     requestBody:
  *       required: true
  *       content:
@@ -286,15 +204,15 @@ clientRouter.post('/changePassword',uploaded, verifyToken, changePassword);
  *         description: Internal Server Error
  */
 
-  clientRouter.post('/forgotPassword',uploaded, forgotPassword); 
+lawyerRouter.post('/forgotPassword',uploaded, forgotPassword); 
 
 /**
  * @swagger
- * /client/resetPassword:
+ * /lawyer/resetPassword:
  *   post:
  *     summary: Reset Password
- *     tags: [ClientAuthentications]
- *     description: Reset the user's password using a valid reset token.
+ *     tags: [LawyerAuthentications]
+ *     description: Reset the Lawyer's password using a valid reset token.
  *     requestBody:
  *       required: true
  *       content:
@@ -318,16 +236,16 @@ clientRouter.post('/changePassword',uploaded, verifyToken, changePassword);
  *         description: Internal Server Error
  */
 
-clientRouter.post('/resetPassword',uploaded, resetPassword);
+lawyerRouter.post('/resetPassword',uploaded, resetPassword);
 
 
   /**
  * @swagger
- * /client/individual/verifyProfile:
+ * /lawyer/verifyProfile:
  *   post:
- *     summary: Client verifyProfile
- *     tags: [ClientAuthentications]
- *     description: Client verifyProfile
+ *     summary: Lawyer verifyProfile
+ *     tags: [LawyerAuthentications]
+ *     description: Lawyer verifyProfile
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -373,71 +291,17 @@ clientRouter.post('/resetPassword',uploaded, resetPassword);
  *         description: Conflict - verifyProfile already exists
  */
 
-  clientRouter.post('/individual/verifyProfile',uploaded, verifyToken, verifyClientAndCompleteProfile);
+  lawyerRouter.post('/verifyProfile',uploaded, verifyToken, verifyClientAndCompleteProfile);
 
-  /**
- * @swagger
- * /client/organization/verifyProfile:
- *   post:
- *     summary: Client verifyProfile
- *     tags: [ClientAuthentications]
- *     description: Client verifyProfile
- *     security:
- *       - bearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         multipart/form-data:
- *           schema:
- *             type: object
- *             properties:
- *               name:
- *                type: string
- *               phone: 
- *                type: string
- *               photo:
- *                 type: file
- *                 items: 
- *                   type: String
- *                   format: binary
- *               country:
- *                 type: string
- *               city:
- *                 type: string
- *               district:
- *                 type: string
- *               sector:
- *                 type: string
- *               cell:
- *                 type: string
- *               registrationNumber:
- *                 type: string
- *               contactPerson:
- *                 type: string
- *               documents:
- *                 type: file
- *                 items: 
- *                   type: String
- *                   format: binary
- * 
- *     responses:
- *       201:
- *         description: verified successfully
- *       400:
- *         description: Bad Request - Invalid data
- *       409:
- *         description: Conflict - verifyProfile already exists
- */
-
-  clientRouter.post('/organization/verifyProfile',uploaded, verifyToken, verifyClientAndCompleteProfile);
+  
 
 /**
  * @swagger
- * /client/all:
+ * /lawyer/all:
  *   get:
- *     summary: Get all users
- *     tags: [ClientAuthentications]
- *     description: Retrieve a list of all users.
+ *     summary: Get all Lawyer
+ *     tags: [LawyerAuthentications]
+ *     description: Retrieve a list of all lawyers.
  *     responses:
  *       200:
  *         description: Success
@@ -460,7 +324,7 @@ clientRouter.post('/resetPassword',uploaded, resetPassword);
  *                 type: string
  */
 
-clientRouter.get('/all',  getAllClients);
+lawyerRouter.get('/all',  getAllClients);
 // ... (other routes)
 
-export default clientRouter;
+export default lawyerRouter;

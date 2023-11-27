@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 const mongoosePaginate = require('mongoose-paginate-v2');
 
 const clientSchema = new mongoose.Schema({
+    // Common Fields
     name: {
         type: String,
         required: false,
@@ -29,12 +30,13 @@ const clientSchema = new mongoose.Schema({
     },
     confirmPassword: {
         type: String,
-        required: true,
+        required: false,
         min: 6,
         max: 255
     },
-    image: {
-         
+    photo: {
+        type: String,
+        required: false,
     },
     isVerified: {
         type: Boolean,
@@ -78,14 +80,47 @@ const clientSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        default: 'user' 
-         },
+        default: 'user'
+    },
     date: {
         type: Date,
         default: Date.now
     },
-
-});
-
-clientSchema.plugin(mongoosePaginate);
-export const CLIENT = mongoose.model('Client', clientSchema);
+    lastLogin: {
+        type: Date,
+        required: true,
+        default: Date.now,
+    },
+    userType: {
+        type: String,
+        enum: ['individual', 'organization', 'admin', 'lawyer'],
+        required: false,
+      },
+    
+      // Additional Fields for Organization Clients
+      registrationNumber: {
+        type: String,
+        required: false,
+        minlength: 3,
+        maxlength: 255,
+      },
+      industry: {
+        type: String,
+        required: false,
+        minlength: 3,
+        maxlength: 255,
+      },
+      contactPerson: {
+        type: String,
+        required: false,
+        minlength: 3,
+        maxlength: 255,
+      },
+      documents: {
+        type: Array,
+        required: false,
+      },
+    });
+    
+    clientSchema.plugin(mongoosePaginate);
+    export const CLIENT = mongoose.model('Client', clientSchema);
