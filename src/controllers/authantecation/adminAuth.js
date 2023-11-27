@@ -1,4 +1,4 @@
-import { LAWYER } from '../../models/lawyerModel.js';
+import { ADMIN } from '../../models'
 import { transporter } from '../../utils/mailTransport.js';
 import { generateToken, comparePassword, hashPassword } from '../../utils';
 import { v2 as cloudinary } from 'cloudinary';
@@ -19,7 +19,7 @@ export const signup = async (req, res) => {
     const { email, password, confirmPassword, userType } = req.body;
 
     // Check if the email already exists
-    const existingUser = await LAWYER.findOne({ email });
+    const existingUser = await ADMIN.findOne({ email });
 
     if (existingUser) {
       return res.status(409).json({
@@ -39,9 +39,9 @@ export const signup = async (req, res) => {
 
     // Create a new user based on userType
     let newUser;
-    if (userType === 'lawyer') {
+    if (userType === 'admin') {
       const { name, phone,userType,category} = req.body;
-      newUser = await LAWYER.create({
+      newUser = await ADMIN.create({
         email,
         password: hashedPassword, 
         name,
@@ -79,7 +79,7 @@ export const signup = async (req, res) => {
     res.status(201).json({
       message: 'User registered successfully',
       access_token: token,
-      LAWYER: {
+      ADMIN: {
         email: newUser.email,
         name: newUser.name,
         role: newUser.role,
@@ -99,7 +99,7 @@ export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const user = await LAWYER.findOne({ email });
+    const user = await ADMIN.findOne({ email });
 
     if (!user) {
       return res.status(404).json({
@@ -122,7 +122,7 @@ export const login = async (req, res) => {
     res.status(200).json({
       message: 'User logged in successfully',
       access_token: token,
-      LAWYER: {
+      ADMIN: {
         email: user.email,
         name: user.name,
         role: user.role,
@@ -141,7 +141,7 @@ export const login = async (req, res) => {
 export const forgotPassword = async (req, res) => {
   try {
     const { email, useOtp } = req.body;
-    const user = await LAWYER.findOne({ email });
+    const user = await ADMIN.findOne({ email });
 
     if (!user) {
       return res.status(404).json({
@@ -199,7 +199,7 @@ export const forgotPassword = async (req, res) => {
 export const resetPassword = async (req, res) => {
   try {
     const { resetToken, newPassword } = req.body;
-    const user = await LAWYER.findOne({
+    const user = await ADMIN.findOne({
       resetPasswordToken: resetToken,
       resetPasswordExpires: { $gt: Date.now() },
     });
@@ -246,7 +246,7 @@ export const changePassword = async (req, res) => {
   try {
     const { currentPassword, newPassword } = req.body;
     const { userId } = req;
-    const user = await LAWYER.findById(userId);
+    const user = await ADMIN.findById(userId);
 
     const isPasswordCorrect = await comparePassword(currentPassword, user.password);
 
@@ -275,7 +275,7 @@ export const changePassword = async (req, res) => {
 export const verifyClientAndCompleteProfile = async (req, res) => {
   try {
     const { userId } = req;
-    const user = await LAWYER.findById(userId);
+    const user = await ADMIN.findById(userId);
     // Check if the user is not yet verified
     const userType = user.userType;
     
@@ -372,6 +372,37 @@ export const verifyClientAndCompleteProfile = async (req, res) => {
             user.documents = result.secure_url;
           }
       }
+      else if (userType === 'admin') {
+        // Update the user object with the provided form data
+        const {name,nationalID,phone, country, city, district, sector, cell, category } = req.body;
+       
+        user.name = name || user.name;
+        user.nationalID = nationalID || user.nationalID;
+        user.category = category || user.category;
+        user.country = country || user.country;
+        user.city = city || user.city;
+        user.district = district || user.district;
+        user.sector = sector || user.sector;
+        user.cell = cell || user.cell;
+     
+        user.phone = phone || user.phone;
+      
+        // Check for file upload
+        if (req.files && req.files['photo'] && req.files['photo'][0]) {
+          // Upload the photo to Cloudinary
+          const result = await cloudinary.uploader.upload(req.files['photo'][0].path);
+  
+          // Update the user's photo URL with the Cloudinary URL
+          user.photo = result.secure_url;
+        }
+       else if (req.files && req.files['documents'] && req.files['documents'][0]) {
+            // Upload the document to Cloudinary
+            const result = await cloudinary.uploader.upload(req.files['documents'][0].path);
+    
+            // Update the user's document URL with the Cloudinary URL
+            user.documents = result.secure_url;
+          }
+      }
       // Mark the user as verified
       user.isVerified = true;
       await user.save();
@@ -391,9 +422,9 @@ export const verifyClientAndCompleteProfile = async (req, res) => {
 // Get All Clients
 export const getAllClients = async (req, res) => {
   try {
-    const clients = await LAWYER.find();
+    const clients = await ADMIN.find();
     res.status(200).json({
-      message: 'All Lawyers',
+      message: 'All Admins',
       clients,
     });
   } catch (error) {

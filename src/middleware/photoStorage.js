@@ -3,12 +3,14 @@ import multer from 'multer';
 
 export const storage = multer.diskStorage({
   destination(req, file, cb) {
-    cb(null, 'tour_assets/');
+    cb(null, 'Images/');
   },
   filename(req, file, cb) {
     cb(null, Date.now()+'-'+ file.originalname);
   },
 });
 
-const upload = multer({ dest: 'tour_assets/', storage: storage });
-export const uploaded = upload.fields([{name: 'backdropImage', maxCount: 1}, {name: 'Gallery', maxCount: 8}]);
+const upload = multer({ dest: 'Images/', storage: storage });
+ export const uploaded = upload.fields([{name: 'photo', maxCount: 1}, {name: 'documents', maxCount: 8}]);
+// export const uploaded = upload.fields([{name: 'photo', maxCount: 1}]);
+// export const uploaded = upload.fields([{name: 'documents', maxCount: 1}]);
