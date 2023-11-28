@@ -1,4 +1,5 @@
 import {Case} from "../../models";
+import { isAdmin } from "../../middleware";
 export const  createCase = async(req, res) =>{
    try{
     let CASE = req.body;
