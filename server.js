@@ -1,14 +1,15 @@
+// server.js
 import express from 'express';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import cors from 'cors';
+import http from 'http'; // Import the 'http' module
+import socketIo from 'socket.io'; // Import the 'socket.io' module
 import mainRouter from './src/routes';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJSDoc from 'swagger-jsdoc';
 import { swaggerOptions } from './src/utils/swaggerConfig';
 import AppError from './src/utils/appError';
-import contactsRouter from "./src/routes"
-// import { globalControllerHandler, globalErrorHandler } from './src/controllers/ErrorController.js';
 
 require('dotenv').config();
 
@@ -22,8 +23,16 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/api/v1', mainRouter);
 
+// Create an HTTP server using the express app
+const server = http.createServer(app);
 
-const swaggerSpec = swaggerJSDoc(swaggerOptions); 
+// Initialize Socket.io and pass the server instance
+const io = socketIo(server);
+
+// Make the io object accessible in other modules
+app.set('io', io);
+
+const swaggerSpec = swaggerJSDoc(swaggerOptions);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
@@ -31,16 +40,6 @@ app.get('/', (req, res) => {
   res.status(200).json({ message: 'Welcome to the API'});
 });
 
-
-// app.all('*', (req, res) => {
-//     next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
-//     });
-
-// app.use(globalControllerHandler);
-
-
-mongoose.connect(process.env.DB_CONNECTION_PROD).then(() => {
-    app.listen(port, () => {
         console.log(`Server running on port http://localhost:${port}`);
         console.log('Database is connected');
     });

@@ -2,7 +2,6 @@ import mongoose from 'mongoose';
 const mongoosePaginate = require('mongoose-paginate-v2');
 
 const adminSchema = new mongoose.Schema({
-  // add lawyer specific fields here
     name: {
         type: String,
         required: false,

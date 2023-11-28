@@ -80,7 +80,7 @@ const clientSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        default: 'user'
+        default: 'client'
     },
     date: {
         type: Date,
