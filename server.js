@@ -40,8 +40,6 @@ app.get('/', (req, res) => {
   res.status(200).json({ message: 'Welcome to the API'});
 });
 
-mongoose.connect(process.env.DB_CONNECTION_PROD).then(() => {
-    server.listen(port, () => {
         console.log(`Server running on port http://localhost:${port}`);
         console.log('Database is connected');
     });

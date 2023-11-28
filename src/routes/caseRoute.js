@@ -1,84 +1,98 @@
 
 import express  from "express";
-import { isAdmin } from "../middleware"
+import { isAdmin } from "../middleware";
 const caseRouter = express.Router();
 
 import {createCase,getbyId, getAll,updateCase,deleteCaseById} from "../controllers/case";
-/*
+/**
  * @swagger
  * components:
  *   schemas:
- *     case:
+ *     Case:
  *       type: object
  *       required:
- *         - caseTittle
+ *         - caseTitle
  *       properties:
- *         caseTittle:
+ *         caseTitle:
  *           type: string
- *           description: auto generated id
+ *           description: Title of the case
  *         typeOfCase:
  *           type: string
- *           description: email of the user
- *         Date:
- *           type: default
- *           description: The response 
+ *           enum: ['family', 'criminal', 'educational']
+ *           description: Type of the case
+ *         dateOfIncident:
+ *           type: string
+ *           description: Date of the incident
+ *         progress:
+ *           type: string
+ *           enum: ['pending', 'complete', 'cancelled']
+ *           description: Progress status of the case
+ *         assignedTo:
+ *           type: string
+ *           description: Assigned user for the case
+ *         paymentMethod:
+ *           type: string
+ *           description: Method of payment
  *       example:
- *         caseTitle: robbery
- *         typeOfCase: Family
- *         Date: 12/dec/2022
+ *         caseTitle: "robbery"
+ *         typeOfCase: "Family"
+ *         dateOfIncident: "2022-12-12"
+ *         progress: "pending"
+ *         assignedTo: "user123"
+ *         paymentMethod: "cash"
  */
+
 /**
  * @swagger
  * tags:
  *   name: Case
  *   description: The Case managing API
  */
+
 /**
  * @swagger
- * /Case/create:
+ * /case/create:
  *   post:
  *     summary: Create a new case
  *     tags: [Case]
- *     security:
- *       - BearerAuth: []
+ *     description: Register a new case
  *     requestBody:
- *          required: true
- *          content:
- *            application/json:
- *               schema:
- *                   $ref: '#/components/schemas/contacts'
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Case'
  *     responses:
  *       201:
- *          description: The new case data was successfully created
- *          content:
- *             application/json:
- *               schema:
- *                   $ref: '#/components/schemas/contacts'
- *       500:
- *          description: Internal Server Error
+ *         description: Case registered successfully
+ *       400:
+ *         description: Bad Request - Invalid data
  */
+
 /**
  * @swagger
- * /Case/getAllCases:
- *    get:
- *      summary: Returns the list of Cases
- *      responses:
- *        200:
- *          description: The list of the cases
- *          content:
- *            application/json:
- *              schema:
- *                type: array
- *                items: 
- *                  $ref: '#/components/schemas/Case'
- */
-/**
- * @swagger
- * /Case/getCaseById/{id}:
+ * /case/getAllCases:
  *   get:
- *     summary: Get the case by ID
- *     tags:
- *       - Case
+ *     summary: Get all cases
+ *     tags: [Case]
+ *     description: Retrieve all cases
+ *     responses:
+ *       200:
+ *         description: List of cases
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Case'
+ */
+
+/**
+ * @swagger
+ * /case/getCaseById/{id}:
+ *   get:
+ *     summary: Get a case by ID
+ *     tags: [Case]
  *     parameters:
  *       - in: path
  *         name: id
@@ -88,21 +102,21 @@ import {createCase,getbyId, getAll,updateCase,deleteCaseById} from "../controlle
  *         description: The case ID
  *     responses:
  *       200:
- *         description: The case description by ID
+ *         description: The case details by ID
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Case'
  *       404:
- *         description: The user was not found
+ *         description: Case not found
  */
+
 /**
  * @swagger
- * /Case/updateCase/{id}:
+ * /case/updateCase/{id}:
  *   patch:
- *     summary: Update the case by ID
- *     tags:
- *       - Case
+ *     summary: Update a case by ID
+ *     tags: [Case]
  *     parameters:
  *       - in: path
  *         name: id
@@ -122,19 +136,19 @@ import {createCase,getbyId, getAll,updateCase,deleteCaseById} from "../controlle
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/case'
+ *               $ref: '#/components/schemas/Case'
  *       404:
- *         description: The case was not found
+ *         description: Case not found
  *       500:
  *         description: Some error occurred
  */
+
 /**
  * @swagger
- * /Case/{id}:
+ * /case/deleteCase/{id}:
  *   delete:
- *     summary: Remove the case by ID
- *     tags:
- *       - Case
+ *     summary: Delete a case by ID
+ *     tags: [Case]
  *     parameters:
  *       - in: path
  *         name: id
@@ -142,12 +156,11 @@ import {createCase,getbyId, getAll,updateCase,deleteCaseById} from "../controlle
  *         schema:
  *           type: string
  *         description: The case ID
- * 
  *     responses:
  *       200:
- *         description: The case was deleted successfully
+ *         description: Case deleted successfully
  *       404:
- *         description: The case was not found
+ *         description: Case not found
  */
 //usersRouter.use(verifyToken);
 caseRouter.get("/getAllCases", getAll);
@@ -155,7 +168,7 @@ caseRouter.post("/create",createCase);
 caseRouter.delete("/deleteCase/:id",deleteCaseById);
 // studentsRouter.put("/:id",putData);
  caseRouter.get("/getCaseById/:id", getbyId);
- caseRouter.patch("/updateCase/:id",updateCase);
+ caseRouter.patch("/updateCase/:id",isAdmin,updateCase);
 
 export default caseRouter;
               
