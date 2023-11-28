@@ -7,5 +7,7 @@ export * from "./subscription Model";
 export * from "./caseModel";
 export * from './testimonyModel';
 export* from "./feedbackModel";
+export * from './chatModel';
+
 
 
