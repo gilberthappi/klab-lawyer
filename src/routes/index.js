@@ -6,6 +6,7 @@ import testimonyRouter from './testimonyRoute';
 import lawyerRouter from './lawyerRoute'
 import adminRouter from './adminRoute';
 import subRouter from './subscriptionRoute';
+import chatRouter from './chatRoute';
 
 const mainRouter = express.Router();
 
@@ -16,5 +17,6 @@ mainRouter.use('/admin', adminRouter);
 mainRouter.use('/sub', subRouter);
 mainRouter.use('/Case',caseRouter);
 mainRouter.use("/testimony", testimonyRouter);
+mainRouter.use("/chat", chatRouter);
 
 export  default mainRouter;
