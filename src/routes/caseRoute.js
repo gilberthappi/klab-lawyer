@@ -33,6 +33,18 @@ import {createCase,getbyId, getAll,updateCase,deleteCaseById} from "../controlle
  *         paymentMethod:
  *           type: string
  *           description: Method of payment
+ *         photo:
+ *           type: array
+ *           items:
+ *             type: string
+ *             format: binary
+ *           description: images for showing evidences
+ *         documents:
+ *           type: array
+ *           items:
+ *             type: string
+ *             format: binary
+ *           description: documents for explaining the case
  *       example:
  *         caseTitle: "robbery"
  *         typeOfCase: "Family"
@@ -59,7 +71,7 @@ import {createCase,getbyId, getAll,updateCase,deleteCaseById} from "../controlle
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             $ref: '#/components/schemas/Case'
  *     responses:
@@ -127,7 +139,7 @@ import {createCase,getbyId, getAll,updateCase,deleteCaseById} from "../controlle
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             $ref: '#/components/schemas/Case'
  *     responses:
@@ -167,8 +179,8 @@ caseRouter.get("/getAllCases", getAll);
 caseRouter.post("/create",createCase);
 caseRouter.delete("/deleteCase/:id",deleteCaseById);
 // studentsRouter.put("/:id",putData);
- caseRouter.get("/getCaseById/:id", getbyId);
- caseRouter.patch("/updateCase/:id",isAdmin,updateCase);
+  caseRouter.get("/getCaseById/:id", getbyId);
+  caseRouter.patch("/updateCase/:id",isAdmin,updateCase);
 
 export default caseRouter;
               

@@ -22,7 +22,6 @@ const port = process.env.PORT || 5000;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/api/v1', mainRouter);
-
 // Create an HTTP server using the express app
 const server = http.createServer(app);
 
@@ -39,10 +38,17 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.get('/', (req, res) => {
   res.status(200).json({ message: 'Welcome to the API'});
 });
-
-        console.log(`Server running on port http://localhost:${port}`);
-        console.log('Database is connected');
+mongoose.connect(process.env.DB_CONNECTION_PROD)
+  .then(() => {
+    console.log('Database is connected');
+    server.listen(port, () => {
+      console.log(`Server running on port http://localhost:${port}`);
     });
-}).catch((err) => {
-    console.log(err);
-});
+  })
+  .catch((err) => {
+    console.error('Error connecting to the database:', err);
+  });
+
+//}).catch((err) => {
+    //console.log(err);
+//});

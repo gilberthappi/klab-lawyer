@@ -15,6 +15,7 @@ export const swaggerOptions = {
           url: 'https://abc/api/v1',
         },
       ],
+      
     },
     apis: ['./src/routes/*.js'],
   };

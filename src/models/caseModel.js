@@ -3,15 +3,18 @@ const caseSchema = mongoose.Schema({
     caseTitle: String,
     typeOfCase: String,
     dateOfIncident: String,
-    progress: {
-        type: String,
-        enum: ['pending', 'complete', 'canselled'],
-        required: false,
-      },
+    progress: String,
+    // progress: {
+    //     type: String,
+    //     enum: ['pending', 'complete', 'canselled'],
+    //     required: false,
+    //   },
     assignedTo:String,
     paymentMenthod:String,
     lawyer: String,
-    location: String
+    location: String,
+    photo: [String],
+    documents:[String],
 
 });
 export const Case =mongoose.model("Case", caseSchema);
