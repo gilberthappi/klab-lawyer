@@ -29,7 +29,7 @@ import {createCase,getbyId, getAll,updateCase,deleteCaseById} from "../controlle
  *           description: Progress status of the case
  *         assignedTo:
  *           type: string
- *           description: Assigned user for the case
+ *           description: Assigned Lawyer for the case
  *         paymentMethod:
  *           type: string
  *           description: Method of payment
