@@ -9,7 +9,10 @@ const caseSchema = mongoose.Schema({
     //     enum: ['pending', 'complete', 'canselled'],
     //     required: false,
     //   },
-    assignedTo:String,
+    assignedTo:{
+        type:String,
+        required: false
+    },
     paymentMenthod:String,
     lawyer: String,
     location: String,

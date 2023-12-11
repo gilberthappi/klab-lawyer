@@ -1,6 +1,6 @@
 
 import express  from "express";
-import { isAdmin } from "../middleware";
+import { isAdmin,isLawyer } from "../middleware";
 const caseRouter = express.Router();
 
 import {createCase,getbyId, getAll,updateCase,deleteCaseById} from "../controllers/case";
@@ -125,9 +125,9 @@ import {createCase,getbyId, getAll,updateCase,deleteCaseById} from "../controlle
 
 /**
  * @swagger
- * /case/updateCase/{id}:
+ * /case/userUpdateCase/{id}:
  *   patch:
- *     summary: Update a case by ID
+ *     summary: A user may update a case by ID
  *     tags: [Case]
  *     parameters:
  *       - in: path
@@ -157,6 +157,71 @@ import {createCase,getbyId, getAll,updateCase,deleteCaseById} from "../controlle
 
 /**
  * @swagger
+ * /case/adminUpdateCase/{id}:
+ *   patch:
+ *     summary: An admin may update a case by ID to assign it to the lawyer
+ *     tags: [Case]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The case ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             $ref: '#/components/schemas/Case'
+ *     responses:
+ *       200:
+ *         description: The case was updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Case'
+ *       404:
+ *         description: Case not found
+ *       500:
+ *         description: Some error occurred
+ */
+
+/**
+ * @swagger
+ * /case/lawyerUpdateCase/{id}:
+ *   patch:
+ *     summary: A lawyer may update a case by ID to show the progress and yo approve or reject
+ *     tags: [Case]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The case ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             $ref: '#/components/schemas/Case'
+ *     responses:
+ *       200:
+ *         description: The case was updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Case'
+ *       404:
+ *         description: Case not found
+ *       500:
+ *         description: Some error occurred
+ */
+
+
+/**
+ * @swagger
  * /case/deleteCase/{id}:
  *   delete:
  *     summary: Delete a case by ID
@@ -180,7 +245,9 @@ caseRouter.post("/create",createCase);
 caseRouter.delete("/deleteCase/:id",deleteCaseById);
 // studentsRouter.put("/:id",putData);
   caseRouter.get("/getCaseById/:id", getbyId);
-  caseRouter.patch("/updateCase/:id",isAdmin,updateCase);
+  caseRouter.patch("/userUpdateCase/:id",updateCase);
+  caseRouter.patch("/adminUpdateCase/:id",isAdmin,updateCase);
+  caseRouter.patch("/lawyerUpdateCase/:id",isLawyer,updateCase);
 
 export default caseRouter;
               

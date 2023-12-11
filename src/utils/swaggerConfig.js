@@ -12,7 +12,7 @@ export const swaggerOptions = {
           url: 'http://localhost:1000/api/v1',
         },
         {
-          url: 'https://abc/api/v1',
+          url: 'https://legal-tech-api.onrender.com',
         },
       ],
       
