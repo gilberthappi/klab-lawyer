@@ -1,9 +1,16 @@
 
 import express  from "express";
-import { isAdmin,isLawyer } from "../middleware";
+import { isAdmin,isLawyer ,verifyToken} from "../middleware";
 const caseRouter = express.Router();
 
 import {createCase,getbyId, getAll,updateCase,deleteCaseById} from "../controllers/case";
+/**
+ * @swagger
+ * tags:
+ *   name: Case
+ *   description: The Case managing API
+ */
+
 /**
  * @swagger
  * components:
@@ -56,18 +63,13 @@ import {createCase,getbyId, getAll,updateCase,deleteCaseById} from "../controlle
 
 /**
  * @swagger
- * tags:
- *   name: Case
- *   description: The Case managing API
- */
-
-/**
- * @swagger
  * /case/create:
  *   post:
  *     summary: Create a new case
  *     tags: [Case]
  *     description: Register a new case
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -191,7 +193,7 @@ import {createCase,getbyId, getAll,updateCase,deleteCaseById} from "../controlle
  * @swagger
  * /case/lawyerUpdateCase/{id}:
  *   patch:
- *     summary: A lawyer may update a case by ID to show the progress and yo approve or reject
+ *     summary: A lawyer may update a case by ID to show the progress and to approve or reject
  *     tags: [Case]
  *     parameters:
  *       - in: path
@@ -219,7 +221,6 @@ import {createCase,getbyId, getAll,updateCase,deleteCaseById} from "../controlle
  *         description: Some error occurred
  */
 
-
 /**
  * @swagger
  * /case/deleteCase/{id}:
@@ -241,7 +242,7 @@ import {createCase,getbyId, getAll,updateCase,deleteCaseById} from "../controlle
  */
 //usersRouter.use(verifyToken);
 caseRouter.get("/getAllCases", getAll);
-caseRouter.post("/create",createCase);
+caseRouter.post("/create",verifyToken,createCase);
 caseRouter.delete("/deleteCase/:id",deleteCaseById);
 // studentsRouter.put("/:id",putData);
   caseRouter.get("/getCaseById/:id", getbyId);
