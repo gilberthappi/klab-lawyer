@@ -245,7 +245,7 @@ import {createCase,getbyId, getAll,updateCase,deleteCaseById} from "../controlle
  */
 //usersRouter.use(verifyToken);
 caseRouter.get("/getAllCases", getAll);
-caseRouter.post("/create",createCase);
+caseRouter.post("/create",verifyToken,createCase);
 caseRouter.delete("/deleteCase/:id",deleteCaseById);
 // studentsRouter.put("/:id",putData);
   caseRouter.get("/getCaseById/:id", getbyId);
