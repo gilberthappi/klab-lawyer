@@ -1,44 +1,42 @@
 
-
-
 //CODES UNDER TESTING
 
 // ================================================================================
-import multer from "multer";
-import { Case } from "../../models";
- import { isAdmin } from "../../middleware";
-import { storage, uploaded } from "../../middleware/photoStorage"; // Replace with the correct path to your multer configuration file
+  import multer from "multer";
+  import { Case } from "../../models";
+  import { isAdmin } from "../../middleware";
+  import { storage, uploaded } from "../../middleware/photoStorage"; // Replace with the correct path to your multer configuration file
 
- export const createCase = async (req, res) => {
- try {
-    uploaded(req, res, async function (err) {
-     if (err instanceof multer.MulterError) {
-        return res.status(400).json({ error: "File upload error" });
-       } else if (err) {
-        return res.status(500).json({ error: "Internal server error" });
-     }
+  export const createCase = async (req, res) => {
+  try {
+      uploaded(req, res, async function (err) {
+      if (err instanceof multer.MulterError) {
+          return res.status(400).json({ error: "File upload error" });
+        } else if (err) {
+          return res.status(500).json({ error: "Internal server error" });
+      }
 
-       let CASE = req.body;
-      
-      // Assuming 'photo' is the name of the field for the uploaded photo
-     if (req.files['photo']) {
-        CASE.photo = req.files['photo'][0].filename;
-     }
+        let CASE = req.body;
+        
+        // Assuming 'photo' is the name of the field for the uploaded photo
+      if (req.files['photo']) {
+          CASE.photo = req.files['photo'][0].filename;
+      }
 
-     // Assuming 'documents' is the name of the field for the uploaded documents
-      if (req.files['documents']) {
-        CASE.documents = req.files['documents'].map(doc => doc.filename);
-     }
+      // Assuming 'documents' is the name of the field for the uploaded documents
+        if (req.files['documents']) {
+          CASE.documents = req.files['documents'].map(doc => doc.filename);
+      }
 
-      let newCase = await Case.create(CASE);
-       console.log(newCase);
-      console.log('newcase================', newCase);
-      res.status(201).json(newCase);
-    });
-  } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
-  }
-};
+        let newCase = await Case.create(CASE);
+        console.log(newCase);
+        console.log('newcase================', newCase);
+        res.status(201).json(newCase);
+      });
+    } catch (error) {
+      res.status(500).json({ error: "Internal server error" });
+    }
+  };
 
 // ==========================-----------------------===============================
 

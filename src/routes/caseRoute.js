@@ -23,6 +23,9 @@ import {createCase,getbyId, getAll,updateCase,deleteCaseById} from "../controlle
  *         caseTitle:
  *           type: string
  *           description: Title of the case
+ *         description:
+ *           type: string
+ *           description: Details on the case
  *         typeOfCase:
  *           type: string
  *           enum: ['family', 'criminal', 'educational']
@@ -242,7 +245,7 @@ import {createCase,getbyId, getAll,updateCase,deleteCaseById} from "../controlle
  */
 //usersRouter.use(verifyToken);
 caseRouter.get("/getAllCases", getAll);
-caseRouter.post("/create",verifyToken,createCase);
+caseRouter.post("/create",createCase);
 caseRouter.delete("/deleteCase/:id",deleteCaseById);
 // studentsRouter.put("/:id",putData);
   caseRouter.get("/getCaseById/:id", getbyId);

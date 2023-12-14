@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 const caseSchema = mongoose.Schema({
     caseTitle: String,
+    description:String,
     typeOfCase: String,
     dateOfIncident: String,
     progress: String,
